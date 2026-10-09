@@ -31,11 +31,11 @@ d.querySelectorAll('form.js-lead').forEach(function(f){
     e.preventDefault();
     var hp=f.querySelector('[name=_honey]');
     if(!f.checkValidity()){f.reportValidity();return;}
-    var quiet=(hp&&hp.value)||!touched||(Date.now()-loadedAt<4000);
-    if(quiet){show('ok','Mahalo! Your request is in. We\u2019ll reply within one business day.');f.reset();return;}
+    if((hp&&hp.value)||!touched)return;
+    if(Date.now()-loadedAt<3500){show('warn','Give the form a moment, then send again.');return;}
     var to=addr(f);if(!to){show('err','Something went wrong on our end. Please call 1-800-481-8638.');return;}
     var data={};new FormData(f).forEach(function(v,k){if(k!=='_honey')data[k]=v;});
-    data._subject=f.getAttribute('data-subject')||'Maui-SEO inquiry';data._template='table';data._captcha='false';
+    data._subject=f.getAttribute('data-subject')||'New lead \u2014 maui-seo.com';data._template='table';data._captcha='false';
     data.page=location.pathname;
     if(sb){sb.disabled=true;sb.dataset.t=sb.textContent;sb.textContent='Sending\u2026';}
     fetch('https://formsubmit.co/ajax/'+to,{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify(data)})
